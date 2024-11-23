@@ -103,6 +103,10 @@ jobs:
       with:
         swap-size-gb: 12
 
+
+    - name: Setup Debug Session
+      uses: csexton/debugger-action@master
+
     - name: Building recovery
       run: |
         cd ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
