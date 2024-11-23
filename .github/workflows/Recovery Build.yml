@@ -104,8 +104,8 @@ jobs:
         swap-size-gb: 12
 
 
-    - name: Setup Debug Session
-      uses: csexton/debugger-action@master
+#    - name: Setup Debug Session
+#      uses: csexton/debugger-action@master
 
     - name: Building recovery
       run: |
@@ -114,7 +114,14 @@ jobs:
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         set -e
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng
+
+        #KernelSU Patch
+        cd kernel/xiaomi/renoir
+        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
+        cd ../../..
+        
+        make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
       continue-on-error: true
 
